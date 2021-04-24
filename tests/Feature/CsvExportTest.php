@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use Illuminate\Http\Response;
@@ -26,13 +28,21 @@ class CsvExportTest extends TestCase
     public function testDistinctHeaders()
     {
         $tableData = $this->getTableData(3, 2);
-        $tableData['headers'] = [['title' => 'Same title'], ['title' => 'Same title'], ['title' => 'Another title']];
+
+        $tableData['headers'] = [
+            ['title' => 'Same title'],
+            ['title' => 'Same title'],
+            ['title' => 'Another title']
+        ];
 
         $response = $this->patchJson(route('csv.download'), $tableData);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * @throws \League\Csv\Exception
+     */
     public function testFileDownload()
     {
         $tableData = $this->getTableData(rand(3, 5), rand(5, 10));
@@ -50,18 +60,23 @@ class CsvExportTest extends TestCase
         $this->assertCount(count($tableData['rows']), $reader);
     }
 
+    /**
+     * @param int $headersCount
+     * @param int $rowsCount
+     * @return array[]
+     */
     private function getTableData(int $headersCount, int $rowsCount): array
     {
         $headers = [];
         $rows = [];
         $row = [];
 
-        for ($i=0; $i<$headersCount; $i++) {
+        for ($i = 0; $i < $headersCount; $i++) {
             $headers[] = ['title' => Str::random()];
             $row[] = ['val' => Str::random()];
         }
 
-        for ($i=0; $i<$rowsCount; $i++) {
+        for ($i = 0; $i < $rowsCount; $i++) {
             $rows[] = $row;
         }
 

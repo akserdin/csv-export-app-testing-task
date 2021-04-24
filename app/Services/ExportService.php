@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Services;
-
 
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * Class is responsible for exporting data to CSV file
+ */
 class ExportService
 {
     /**
@@ -22,7 +25,7 @@ class ExportService
             'Content-Disposition' => 'attachment;filename="' . $fileName . '"'
         ];
 
-        return new StreamedResponse(function() use($data) {
+        return new StreamedResponse(function () use($data) {
             $handle = fopen('php://output', 'w');
 
             /** CSV headers */
@@ -30,7 +33,7 @@ class ExportService
             fputcsv($handle, $csvTitles);
 
             foreach ($data['rows'] as $row) {
-                $values = collect($row)->map(function($r) {
+                $values = collect($row)->map(function ($r) {
                     return $r['val'];
                 })->all();
 

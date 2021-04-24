@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers;
@@ -7,8 +8,12 @@ use App\Http\Requests\ExportCsvRequest;
 use App\Services\ExportService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * Controller is responsible for file downloading
+ */
 class CsvExportController extends Controller
 {
+    /** @var ExportService */
     private $exportService;
 
     /**

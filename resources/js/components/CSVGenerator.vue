@@ -96,13 +96,15 @@ export default {
       let columnsLen = vm.headers.length;
       let createdRow = [];
 
-      if (columnsLen) {
-        for (let i = 0; i < columnsLen; i++) {
-          createdRow.push({val: ''});
-        }
-
-        vm.rows.push(createdRow);
+      if (! columnsLen) {
+        return;
       }
+
+      for (let i = 0; i < columnsLen; i++) {
+        createdRow.push({val: ''});
+      }
+
+      vm.rows.push(createdRow);
     },
 
     removeRow(index) {
@@ -116,7 +118,7 @@ export default {
     addColumn() {
       let vm = this;
 
-      if (vm.headers.length > 6) {
+      if (vm.headers.length >= vm.columnLimit) {
         return;
       }
 
@@ -139,7 +141,7 @@ export default {
 
       RequestService.export(requestData)
           .then(function(res) {
-            vm.forceFileDownload(res, 'table.csv');
+            vm.forceFileDownload(res, 'table_data.csv');
             vm.loading = false;
           })
           .catch(vm.onError);

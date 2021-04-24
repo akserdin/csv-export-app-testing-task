@@ -1,5 +1,5 @@
 const handleErrorMixin = {
-    data: function() {
+    data: function () {
         return {
             errors: []
         };
@@ -28,7 +28,7 @@ const handleErrorMixin = {
             let errors = [];
 
             for (let key in data.errors) {
-                if (! data.errors.hasOwnProperty(key)) {
+                if (!data.errors.hasOwnProperty(key)) {
                     continue;
                 }
 
