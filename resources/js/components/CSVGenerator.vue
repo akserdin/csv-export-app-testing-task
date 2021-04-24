@@ -55,7 +55,9 @@
       </div>
 
       <div class="card-footer text-center">
-        <b-button size="md" @click="submit()" title="Export all data to CSV file" :disabled="! rows.length || loading">
+        <div class="text-danger py-1" v-for="errorMessage in errors">{{ errorMessage }}</div>
+
+        <b-button class="m-3" size="md" @click="submit()" title="Export all data to CSV file" :disabled="loading">
           <b-icon icon="cloud-download" aria-hidden="true"></b-icon> Export to CSV
         </b-button>
       </div>
@@ -66,9 +68,10 @@
 <script>
 import RequestService from "../services/RequestService";
 import forceDownloadMixin from "../mixins/forceDownloadMixin";
+import handleErrorMixin from "../mixins/handleErrorMixin";
 
 export default {
-  mixins: [forceDownloadMixin],
+  mixins: [forceDownloadMixin, handleErrorMixin],
   props: {
     columnLimit: {
       type: Number,
@@ -131,31 +134,15 @@ export default {
       let vm = this;
       let requestData = {headers: vm.headers, rows: vm.rows};
 
-      if (hasEmptyCells(requestData)) {
-        alert('Please, fill all the table cells');
-
-        return;
-      }
-
       vm.loading = true;
+      vm.errors = [];
 
       RequestService.export(requestData)
           .then(function(res) {
             vm.forceFileDownload(res, 'table.csv');
             vm.loading = false;
           })
-          .catch(vm.handleError);
-    },
-
-    handleError(err) {
-      let vm = this;
-
-      if (err.response) {
-        alert(`${err.response.status}: Something went wrong. Check console for details.`);
-        console.log(err.response);
-      }
-
-      vm.loading = false;
+          .catch(vm.onError);
     }
   },
 
@@ -166,20 +153,6 @@ export default {
       return vm.headers.length > vm.columnLimit;
     }
   }
-}
-
-function hasEmptyCells(requestData) {
-  if (requestData.headers.some(h => ! h.title.length)) {
-    return true;
-  }
-
-  if (requestData.rows.some(function(r) {
-    return r.some(cell => ! cell.val.length);
-  })) {
-    return true;
-  }
-
-  return false;
 }
 </script>
 

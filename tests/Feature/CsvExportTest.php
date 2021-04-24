@@ -15,10 +15,20 @@ class CsvExportTest extends TestCase
      *
      * @return void
      */
-    public function testValidation()
+    public function testBasicValidation()
     {
         /** Attempting to export nothing */
         $response = $this->patchJson(route('csv.download'));
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function testDistinctHeaders()
+    {
+        $tableData = $this->getTableData(3, 2);
+        $tableData['headers'] = [['title' => 'Same title'], ['title' => 'Same title'], ['title' => 'Another title']];
+
+        $response = $this->patchJson(route('csv.download'), $tableData);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }

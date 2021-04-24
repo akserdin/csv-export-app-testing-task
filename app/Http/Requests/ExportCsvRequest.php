@@ -25,7 +25,10 @@ class ExportCsvRequest extends FormRequest
     {
         return [
             'headers' => ['required', 'array', 'min:1'],
-            'rows' => ['required', 'array', 'min:1']
+            'headers.*.title' => ['required', 'distinct'],
+            'rows' => ['required', 'array', 'min:1'],
+            'rows.*' => ['required', 'array', 'min:1'],
+            'rows.*.*.val' => ['required']
         ];
     }
 }
