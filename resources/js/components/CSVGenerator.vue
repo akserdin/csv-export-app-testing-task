@@ -134,6 +134,12 @@ export default {
       let vm = this;
       let requestData = {headers: vm.headers, rows: vm.rows};
 
+      if (hasEmptyCells(requestData)) {
+        alert('Please, fill all the table cells');
+
+        return;
+      }
+
       vm.loading = true;
 
       RequestService.export(requestData)
@@ -154,6 +160,20 @@ export default {
       return vm.headers.length > vm.columnLimit;
     }
   }
+}
+
+function hasEmptyCells(requestData) {
+  if (requestData.headers.some(h => ! h.title.length)) {
+    return true;
+  }
+
+  if (requestData.rows.some(function(r) {
+    return r.some(cell => ! cell.val.length);
+  })) {
+    return true;
+  }
+
+  return false;
 }
 </script>
 
