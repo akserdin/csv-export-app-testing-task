@@ -11,16 +11,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <h1 class="mt-3">Developer test</h1>
-                        <p>
-                            From the table below you will need to add the following functionality
-                        </p>
-                        <ul>
-                            <li>Add a new column to the table</li>
-                            <li>Add a new row to the table</li>
-                            <li>Remove a row from the table</li>
-                            <li>Complete the logic in the /api/csv-export route, which will generate a csv file into the browser.</li>
-                        </ul>
+                        <h1 class="mt-3">Completed testing task</h1>
+                        <p>See original code <a href="https://github.com/F3SYSTEMS1/developer-test" target="_blank">here</a></p>
                     </div>
                 </div>
             </div>
