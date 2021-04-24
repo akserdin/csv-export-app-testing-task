@@ -28,6 +28,7 @@ class CsvExportTest extends TestCase
         $tableData = $this->getTableData(rand(3, 5), rand(5, 10));
         $response = $this->patchJson(route('csv.download'), $tableData);
 
+        $response->assertOk();
         $this->assertEquals(StreamedResponse::class, get_class($response->baseResponse));
 
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
