@@ -13,4 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::patch('csv-export', 'CsvExportController@download');
+Route::patch('csv-export', 'CsvExportController@download')
+    ->name('csv.download');
