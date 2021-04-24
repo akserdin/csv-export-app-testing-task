@@ -1,65 +1,63 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">Table to CSV Generator</div>
+    <div class="card">
+      <div class="card-header">Table to CSV Generator</div>
 
-          <div class="card-body">
-            <table class="table table-bordered">
-              <thead>
-              <tr>
-                <th></th>
-                <th v-for="header in headers">
-                  <input type="text"
-                         class="form-control form-control-sm"
-                         :disabled="loading"
-                         v-model.trim="header.title"/>
-                </th>
-                <th class="text-center">
-                  <b-button v-if="! noMoreColumns" variant="outline-primary"
-                            :disabled="loading"
-                            size="sm"
-                            title="Add new column"
-                            @click="addColumn">+</b-button>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(row, index) in rows">
-                <td class="text-center">
-                  <b-button :disabled="loading" size="sm" variant="outline-danger" @click="removeRow(index)" title="Remove row">
-                    <b-icon icon="trash" aria-label="Remove"></b-icon>
-                  </b-button>
-                </td>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th></th>
+            <th v-for="header in headers">
+              <input type="text"
+                     class="form-control form-control-sm"
+                     :disabled="loading"
+                     :class="{'is-invalid': ! header.title.length}"
+                     v-model.trim="header.title"/>
+            </th>
+            <th class="text-center">
+              <b-button v-if="! noMoreColumns" variant="outline-primary"
+                        :disabled="loading"
+                        size="sm"
+                        title="Add new column"
+                        @click="addColumn">+</b-button>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(row, index) in rows">
+            <td class="text-center">
+              <b-button :disabled="loading" size="sm" variant="outline-danger" @click="removeRow(index)" title="Remove row">
+                <b-icon icon="trash" aria-label="Remove"></b-icon>
+              </b-button>
+            </td>
 
-                <td v-for="cell in row">
-                  <input type="text"
-                         class="form-control form-control-sm"
-                         :disabled="loading"
-                         v-model.trim="cell.val"/>
-                </td>
+            <td v-for="cell in row">
+              <input type="text"
+                     class="form-control form-control-sm"
+                     :class="{'is-invalid': ! cell.val.length}"
+                     :disabled="loading"
+                     v-model.trim="cell.val"/>
+            </td>
 
-                <td></td>
-              </tr>
-              <tr>
-                <td class="text-center" :colspan="headers.length+2">
-                  <b-button :disabled="loading"
-                            size="sm"
-                            variant="outline-warning"
-                            @click="addRow" title="Add new row">+</b-button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="text-center" :colspan="headers.length+2">
+              <b-button :disabled="loading"
+                        size="sm"
+                        variant="outline-warning"
+                        @click="addRow" title="Add new row">+</b-button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <div class="card-footer text-center">
-            <b-button size="md" @click="submit()" title="Export all data to CSV file" :disabled="! rows.length || loading">
-              <b-icon icon="cloud-download" aria-hidden="true"></b-icon> Export to CSV
-            </b-button>
-          </div>
-        </div>
+      <div class="card-footer text-center">
+        <b-button size="md" @click="submit()" title="Export all data to CSV file" :disabled="! rows.length || loading">
+          <b-icon icon="cloud-download" aria-hidden="true"></b-icon> Export to CSV
+        </b-button>
       </div>
     </div>
   </div>
@@ -70,7 +68,6 @@ import RequestService from "../services/RequestService";
 import forceDownloadMixin from "../mixins/forceDownloadMixin";
 
 export default {
-  name: "CSVGenerator",
   mixins: [forceDownloadMixin],
   props: {
     columnLimit: {
@@ -147,9 +144,18 @@ export default {
             vm.forceFileDownload(res, 'table.csv');
             vm.loading = false;
           })
-          .catch(function(err) {
-            vm.loading = false;
-          });
+          .catch(vm.handleError);
+    },
+
+    handleError(err) {
+      let vm = this;
+
+      if (err.response) {
+        alert(`${err.response.status}: Something went wrong. Check console for details.`);
+        console.log(err.response);
+      }
+
+      vm.loading = false;
     }
   },
 
