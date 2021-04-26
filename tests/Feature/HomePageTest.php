@@ -7,11 +7,11 @@ use Tests\TestCase;
 class HomePageTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * Test if home page works :)
      *
      * @return void
      */
-    public function test_if_home_page_works()
+    public function testHomePage()
     {
         $response = $this->get('/');
 

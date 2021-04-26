@@ -12,11 +12,6 @@ use Tests\TestCase;
 
 class CsvExportTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testBasicValidation()
     {
         /** Attempting to export nothing */
